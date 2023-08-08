@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authserver 
+  template:
+    metadata:
+      labels:
+        app: authserver
+    spec:
+      containers:
+      - name: authserver 
+        image: rolfeiacr.azurecr.io/authserver:v2
+        ports:
+        - containerPort: 3001
+      imagePullSecrets:
+      - name: my-acr-secret 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: authserver
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 3001
+    targetPort: 3001
+  selector:
+    app: authserver 
